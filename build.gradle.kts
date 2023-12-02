@@ -1,19 +1,19 @@
 plugins {
-    kotlin("jvm") version "1.9.20"
-    application
+	kotlin("jvm") version "1.9.20"
+	application
 }
 
 group = "sh.nhp"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 kotlin {
-    jvmToolchain(19)
+	jvmToolchain(19)
 }
 
 application {
-    mainClass.set("MainKt")
+	mainClass.set("MainKt")
 }
