@@ -6,14 +6,14 @@ import java.net.http.HttpResponse
 import kotlin.system.exitProcess
 
 abstract class Puzzle(val day: Int) {
-    abstract fun part1(): String
-    abstract fun part2(): String
+    abstract fun part1(): Int
+    abstract fun part2(): Int
 
     val input: String get() {
         return testInput ?: puzzleInput
     }
 
-    var testInput: String? = null
+    open var testInput: String? = null
     val puzzleInput by lazy<String> {
         val inputsDir = System.getProperty("user.dir") + "/inputs"
         File(inputsDir).mkdir()
@@ -32,6 +32,12 @@ abstract class Puzzle(val day: Int) {
                     .build()
                 val client = HttpClient.newHttpClient()
                 val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+                if (response.statusCode() != 200) {
+                    println("Got ${response.statusCode()} when fetching the puzzle input.\nMake sure the session cookie is correct. The response was:\n")
+                    println(response.body())
+                    exitProcess(1)
+                }
 
                 inputFile.createNewFile()
 

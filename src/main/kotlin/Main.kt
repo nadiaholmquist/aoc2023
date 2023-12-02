@@ -1,6 +1,6 @@
 import puzzles.*
 
-fun runPuzzle(day: Int): Pair<String, String>? {
+fun runPuzzle(day: Int): Pair<Int, Int>? {
     val puzzle: Puzzle
 
     try {

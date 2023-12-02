@@ -15,7 +15,7 @@ class Day1 : Puzzle(1) {
                     .filter { it.isDigit() }
                     .map { it.digitToInt() }
                     .let { it.first() * 10 + it.last() }
-            }.sum().toString()
+            }.sum()
 
     override fun part2() =
         input.lines().asSequence()
@@ -25,5 +25,5 @@ class Day1 : Puzzle(1) {
                 if (first == null || last == null) return@mapNotNull null
 
                 (digitMap[first]!! * 10) + digitMap[last]!!
-            }.sum().toString()
+            }.sum()
 }
