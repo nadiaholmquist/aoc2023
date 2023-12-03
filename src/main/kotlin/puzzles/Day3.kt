@@ -1,71 +1,48 @@
 package puzzles
 
 import Puzzle
-import kotlin.math.max
-import kotlin.math.min
 
 class Day3 : Puzzle(3) {
-	val numberRegex = Regex("[0-9]+")
-
-	inner class Number(val x: Int, val y: Int, val value: Int, val digits: Int) {
+	interface Part
+	data class Symbol(val x: Int, val y: Int, val symbol: Char) : Part
+	data class Number(val x: Int, val y: Int, val value: Int, val digits: Int): Part {
 		val range = x..<(x + digits)
+	}
 
-		fun isPartNumber(): Boolean {
-			val lines = input.lines()
-			val lineCount = lines.count()
-			val columnCount = lines[0].count()
-			val xRange = max(0, range.first - 1)..min(range.last + 1, columnCount - 1)
-			val yRange = max(0, y - 1)..min(y + 1, lineCount - 1)
-
-			return yRange.any { y ->
-				val line = lines[y]
-				xRange.any {
-					val char = line[it]
-					!(char in '0'..'9'|| char == '.')
-				}
+	val partsRegex = Regex("[0-9]+|[^.]")
+	val parts = input.lines().flatMapIndexed { y, line ->
+		partsRegex.findAll(line).map {
+			when (it.value.toIntOrNull() != null) {
+				 true -> Number(it.range.first, y, it.value.toInt(), it.range.count())
+				 false -> Symbol(it.range.first, y, it.value[0])
 			}
 		}
 	}
 
-	fun scanNumbers(): List<Number> =
-		input.lines().flatMapIndexed { y, line ->
-			numberRegex.findAll(line).map { match ->
-				Number(match.range.first, y, match.value.toInt(), match.range.count())
+	val numbers = parts.filterIsInstance<Number>().groupBy { it.y }
+	val symbols = parts.filterIsInstance<Symbol>()
+
+	val adjacentNumbers = symbols.asSequence()
+		.map { (x, y, symbol) ->
+			val positions = listOf(
+				(x-1)..(x+1) to y - 1,
+				(x-1)..(x+1) to y,
+				(x-1)..(x+1) to y + 1
+			)
+
+			symbol to positions.flatMap { (range, y) ->
+				numbers[y]?.filter { number ->
+					number.range.intersect(range).isNotEmpty()
+				} ?: emptyList()
 			}
 		}
 
-	fun scanGears(): List<Pair<Int, Int>> =
-		input.lines().flatMapIndexed { y, line ->
-			line.indices.filter {
-				line[it] == '*'
-			}.map { it to y }
-		}
+	override fun part1() = adjacentNumbers
+		.flatMap { it.second }
+		.sumOf { it.value }
 
-	val numbers = scanNumbers()
-	val gears = scanGears()
-
-	override fun part1() =
-		numbers.filter { it.isPartNumber() }.sumOf { it.value }
-
-	override fun part2(): Int {
-		val groupedNumbers = numbers.groupBy { it.y }
-
-		return gears.asSequence()
-			.map { (x, y) ->
-				val positions = listOf(
-					(x-1)..(x+1) to y - 1,
-					(x-1)..(x+1) to y,
-					(x-1)..(x+1) to y + 1
-				)
-
-				positions.flatMap { (range, y) ->
-					groupedNumbers[y]?.filter { number ->
-						number.range.intersect(range).isNotEmpty()
-					} ?: emptyList()
-				}
-			}
-			.filter { it.count() > 1 }
-			.map { it.map { it.value }.reduce(Int::times) }
-			.sum()
-	}
+	override fun part2() = adjacentNumbers
+		.filter { (symbol, numbers) -> symbol == '*' && numbers.count() > 1 }
+		.map { it.second.map { it.value }.reduce(Int::times) }
+		.sum()
 }
