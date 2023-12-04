@@ -2,7 +2,7 @@ package puzzles
 
 import Puzzle
 
-class Day2 : Puzzle(2) {
+class Day2(input: String) : Puzzle(input) {
 	enum class CubeColor {
 		RED, GREEN, BLUE;
 

@@ -2,7 +2,7 @@ package puzzles
 
 import Puzzle
 
-class Day3 : Puzzle(3) {
+class Day3(input: String) : Puzzle(input) {
 	interface Part
 	data class Symbol(val x: Int, val y: Int, val symbol: Char) : Part
 	data class Number(val x: Int, val y: Int, val value: Int, val digits: Int): Part {

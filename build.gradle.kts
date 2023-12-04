@@ -10,6 +10,11 @@ repositories {
 	mavenCentral()
 }
 
+dependencies {
+	implementation(kotlin("reflect"))
+	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+}
+
 kotlin {
 	jvmToolchain(19)
 }

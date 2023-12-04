@@ -2,7 +2,7 @@ package puzzles
 
 import Puzzle
 
-class Day4 : Puzzle(4) {
+class Day4(input: String) : Puzzle(input) {
 	data class Card(val number: Int, val winningNumbers: Set<Int>, val haveNumbers: Set<Int>) {
 		val matching = winningNumbers.intersect(haveNumbers).count()
 		val pointsWorth = 1 shl (matching - 1)
