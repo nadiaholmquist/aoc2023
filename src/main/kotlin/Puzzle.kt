@@ -14,7 +14,7 @@ abstract class Puzzle(val day: Int) {
 			return testInput ?: puzzleInput
 		}
 
-	open var testInput: String? = null
+	var testInput: String? = null
 	val puzzleInput by lazy<String> {
 		val inputsDir = System.getProperty("user.dir") + "/inputs"
 		File(inputsDir).mkdir()
