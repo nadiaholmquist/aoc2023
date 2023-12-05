@@ -1,6 +1,7 @@
 package puzzles
 
 import Puzzle
+import utils.intersects
 
 class Day3(input: String) : Puzzle(input) {
 	interface Part
@@ -32,7 +33,7 @@ class Day3(input: String) : Puzzle(input) {
 
 			symbol to positions.flatMap { (range, y) ->
 				numbers[y]?.filter { number ->
-					number.range.intersect(range).isNotEmpty()
+					number.range.intersects(range)
 				} ?: emptyList()
 			}
 		}
