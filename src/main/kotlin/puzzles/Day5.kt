@@ -1,12 +1,8 @@
 package puzzles
 
 import Puzzle
+import utils.intersects
 import kotlin.math.min
-
-fun LongRange.contains(other: LongRange) =
-	other.first >= this.first && other.first <= this.last ||
-		other.last >= this.first && other.last <= this.last
-
 
 class Day5(input: String) : Puzzle(input) {
 	class ItemMap(ranges: List<Pair<LongRange, Long>>, val name: String) {
@@ -23,7 +19,7 @@ class Day5(input: String) : Puzzle(input) {
 			val outRanges = mutableListOf<LongRange>()
 
 			var currIndex = sourceRanges.binarySearch {
-				if (it.contains(range)) 0
+				if (it.intersects(range)) 0
 				else if (range.last < it.first) 1
 				else -1
 			}

@@ -1,7 +1,4 @@
-import puzzles.Day5
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.expect
 
 class PuzzleTests {
 	@Test fun day1part1() = testPart1(1, 142)
