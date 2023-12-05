@@ -13,6 +13,8 @@ repositories {
 dependencies {
 	implementation(kotlin("reflect"))
 	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+
+	testImplementation(kotlin("test"))
 }
 
 kotlin {
@@ -21,4 +23,8 @@ kotlin {
 
 application {
 	mainClass.set("MainKt")
+}
+
+tasks.test {
+	useJUnitPlatform()
 }
