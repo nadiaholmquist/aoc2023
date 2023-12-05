@@ -1,37 +1,66 @@
 package puzzles
 
 import Puzzle
-import kotlin.concurrent.thread
+import kotlin.math.min
+
+fun LongRange.contains(other: LongRange) =
+	other.first >= this.first && other.first <= this.last ||
+		other.last >= this.first && other.last <= this.last
+
 
 class Day5(input: String) : Puzzle(input) {
-	class ItemMap(ranges: List<Pair<LongRange, LongRange>>, val name: String) {
+	class ItemMap(ranges: List<Pair<LongRange, Long>>, val name: String) {
 		val sourceRanges: List<LongRange>
-		val destRanges: List<LongRange>
+		val offsets: List<Long>
 
 		init {
 			val sortedRanges = ranges.sortedBy { it.first.first }
 			sourceRanges = sortedRanges.map { it.first }
-			destRanges = sortedRanges.map { it.second }
+			offsets = sortedRanges.map { it.second }
 		}
 
-		fun findMapping(entry: Long): Long {
-			val foundIndex = sourceRanges.binarySearch {
-				if (entry in it) 0
-				else if (entry < it.first) 1
+		fun mapRange(range: LongRange): List<LongRange> {
+			val outRanges = mutableListOf<LongRange>()
+
+			var currIndex = sourceRanges.binarySearch {
+				if (it.contains(range)) 0
+				else if (range.last < it.first) 1
 				else -1
 			}
 
-			if (foundIndex < 0) return entry
+			val numRanges = sourceRanges.count()
+			if (currIndex < 0) return listOf(range)
 
-			val inSource = sourceRanges[foundIndex]
-			val inDest = destRanges[foundIndex]
+			var remainingRange = range
 
-			return inDest.first + (entry - inSource.first)
+			while (currIndex < numRanges) {
+				val source = sourceRanges[currIndex]
+				val offset = offsets[currIndex]
+
+				if (source.first > remainingRange.first) {
+					outRanges += remainingRange.first..<source.first
+					remainingRange = source.first..remainingRange.last
+				}
+
+				val toTake = min(remainingRange.last, source.last)
+				outRanges += (remainingRange.first + offset)..(toTake + offset)
+				remainingRange = toTake..remainingRange.last
+
+				if (remainingRange.first >= remainingRange.last) {
+					break
+				}
+				currIndex++
+			}
+
+			if (remainingRange.first < remainingRange.last)
+				outRanges += (remainingRange.first + 1)..remainingRange.last
+
+			return outRanges
 		}
 
 		override fun toString(): String {
-			return sourceRanges.zip(destRanges).joinToString(", ") {(src, dest) ->
-				"${src.first} ${dest.first} ${src.count()}"
+			return sourceRanges.zip(offsets).joinToString(", ") {(src, dest) ->
+				"${src.first} ${src.first + dest} ${src.count()}"
 			}
 		}
 
@@ -44,7 +73,7 @@ class Day5(input: String) : Puzzle(input) {
 					val matches = numberRegex.findAll(line)
 					val (destStart, srcStart, count) = matches.map { it.value.toLong() }.toList()
 
-					srcStart..<(srcStart + count) to destStart..<(destStart + count)
+					srcStart..<(srcStart + count) to destStart - srcStart
 				}
 
 				return ItemMap(ranges, lines.first())
@@ -62,12 +91,12 @@ class Day5(input: String) : Puzzle(input) {
 
 	override fun part1(): Int {
 		val mappings = seeds.map {
-			itemMaps.fold(it) { acc, map ->
-				map.findMapping(acc)
+			itemMaps.fold(it..it) { acc, map ->
+				map.mapRange(acc).first()
 			}
 		}
 
-		return mappings.min().toInt()
+		return mappings.minBy { it.first }.first.toInt()
 	}
 
 	override fun part2(): Int {
@@ -75,17 +104,12 @@ class Day5(input: String) : Puzzle(input) {
 			.chunked(2)
 			.map { (first, last) -> first..<(first+last) }
 
-		val result = LongArray(seedGroups.count())
-		seedGroups.toList().mapIndexed { index, it ->
-			 thread {
-				  result[index] = it.minOf {
-					  itemMaps.fold(it) { acc, map ->
-						   map.findMapping(acc)
-					  }
-				  }
-			 }
-		}.forEach { it.join() }
+		val result = seedGroups.flatMap {
+			itemMaps.fold(listOf(it)) { acc, map ->
+				acc.flatMap { map.mapRange(it) }
+			}
+		}
 
-		return result.min().toInt()
+		return result.toList().minBy { it.first }.first.toInt()
 	}
 }
