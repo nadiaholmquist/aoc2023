@@ -36,7 +36,7 @@ class Day3(input: String) : Puzzle(input) {
 					number.range.intersects(range)
 				} ?: emptyList()
 			}
-		}
+		}.toList()
 
 	override fun part1() = adjacentNumbers
 		.flatMap { it.second }
@@ -44,6 +44,5 @@ class Day3(input: String) : Puzzle(input) {
 
 	override fun part2() = adjacentNumbers
 		.filter { (symbol, numbers) -> symbol == '*' && numbers.count() > 1 }
-		.map { it.second.map { it.value }.reduce(Int::times) }
-		.sum()
+		.sumOf { it.second.map { it.value }.reduce(Int::times) }
 }

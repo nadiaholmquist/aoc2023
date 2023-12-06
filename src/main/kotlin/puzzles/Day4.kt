@@ -16,7 +16,7 @@ class Day4(input: String) : Puzzle(input) {
 			val winning = numberRegex.findAll(winningStr).map { it.value.toInt() }
 			val have = numberRegex.findAll(haveStr).map { it.value.toInt() }
 			Card(num.toInt(), winning.toSet(), have.toSet())
-		}
+		}.toList()
 
 	override fun part1() =
 		cards.sumOf { it.pointsWorth }

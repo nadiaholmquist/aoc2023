@@ -9,16 +9,16 @@ class Day1(input: String) : Puzzle(input) {
 	) + (1..9).map { it.toString() to it }
 
 	override fun part1() =
-		input.lines().asSequence()
-			.map { line ->
-				line.asSequence()
+		input.lines()
+			.sumOf { line ->
+				line
 					.filter { it.isDigit() }
 					.map { it.digitToInt() }
 					.let { it.first() * 10 + it.last() }
-			}.sum()
+			}
 
 	override fun part2() =
-		input.lines().asSequence()
+		input.lines()
 			.mapNotNull { line ->
 				val first = line.findAnyOf(digitMap.keys)?.second
 				val last = line.findLastAnyOf(digitMap.keys)?.second
