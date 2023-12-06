@@ -7,4 +7,5 @@ class PuzzleTests {
 	@Test fun day3() = testBoth(3, 4361, 467835)
 	@Test fun day4() = testBoth(4, 13, 30)
 	@Test fun day5() = testBoth(5, 35, 46)
+	@Test fun day6() = testBoth(6, 288, 71503)
 }
