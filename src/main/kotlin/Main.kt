@@ -1,13 +1,44 @@
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
+import kotlin.time.Duration
+import kotlin.time.measureTime
 
 fun formatResult(result: Puzzle.Result) = buildString {
 	appendLine("Day ${result.day}:")
-	appendLine("  Setup time: ${result.setupTime.toDouble() / 1000}s")
+	appendLine("  Setup time: ${result.setupTime}")
 	append("  Part 1: ${result.part1 ?: "Unimplemented"} ")
-	appendLine("(${result.part1Time.toDouble() / 1000}s)")
+	appendLine("(${result.part1Time})")
 	append("  Part 2: ${result.part2 ?: "Unimplemented"} ")
-	append("(${result.part2Time.toDouble() / 1000}s)")
+	append("(${result.part2Time})")
+}
+
+fun runBenchmark() {
+	for (i in 1..25) {
+		val p = Puzzle.forDay(i) ?: break
+		println("--- Day $i ---")
+		val instance = p.constructors.first().call(Puzzle.getInput(i))
+		var min = Duration.INFINITE
+		var max = Duration.ZERO
+
+		repeat(10000) {
+			val time = measureTime {
+				instance.part1()
+			}
+			if (time < min) min = time
+			if (time > max) max = time
+		}
+		println("Part 1: min $min, max $max")
+		min = Duration.INFINITE
+		max = Duration.ZERO
+		repeat(10000) {
+			val time = measureTime {
+				instance.part1()
+			}
+			if (time < min) min = time
+			if (time > max) max = time
+		}
+		println("Part 2: min $min, max $max")
+	}
 }
 
 fun main(args: Array<String>) {
@@ -27,8 +58,11 @@ fun main(args: Array<String>) {
 			runDay = day
 		} else if (puzzleToRun.toIntOrNull() != null) {
 			runDay = puzzleToRun.toInt()
+		} else if (puzzleToRun == "benchmark") {
+			runBenchmark()
+			return
 		} else {
-			println("Invalid argument, must be a day from 1-25 or 'today'.")
+			println("Invalid argument, must be a day from 1-25 or 'today' or 'benchmark'.")
 			return
 		}
 
