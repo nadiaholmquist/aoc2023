@@ -1,4 +1,5 @@
 import java.io.File
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -7,31 +8,31 @@ fun getTestInput(named: String): String {
 	return File(inputUrl.toURI()).readText().trimEnd()
 }
 
-fun test(day: Int, part: Int, expected: Int, inputFile: String? = null) {
-	val constructor = Class.forName("puzzles.Day$day").kotlin.constructors.first()
-	val input = getTestInput(inputFile ?: "day${day}_${part}")
-	val puzzle = constructor.call(input) as Puzzle
-	val result = if (part == 1) puzzle.part1() else puzzle.part2()
-	if (result != expected) println("Input:\n$input")
-	assertEquals(expected, result)
-}
+inline fun <reified T : Puzzle<O>, O> test(expected1: O?, expected2: O?, inputFile: String? = null) {
+	val kClass = T::class
+	val input = if (inputFile == null) {
+		val name = kClass.qualifiedName!!
+		val day = name.takeLastWhile { it.isDigit() }.toInt()
+		val suffix = when {
+			expected1 != null && expected2 == null -> "_1"
+			expected1 == null && expected2 != null -> "_2"
+			else -> ""
+		}
+		getTestInput("day$day$suffix")
+	} else getTestInput(inputFile)
 
-fun testPart1(day: Int, expected: Int, inputFile: String? = null) =
-	test(day, 1, expected, inputFile)
+	val puzzle = kClass.constructors.first().call(input)
 
-fun testPart2(day: Int, expected: Int, inputFile: String? = null) =
-	test(day, 2, expected, inputFile)
+	if (expected1 != null && expected2 != null) {
+		val actual1 = puzzle.part1()
+		val actual2 = puzzle.part2()
+		println("Part 1:\n  Actual $actual1\n  Expected: $expected1")
+		println("Part 2:\n  Actual $actual2\n  Expected: $expected2")
 
-fun testBoth(day: Int, expected1: Int, expected2: Int, inputFile: String? = null) {
-	val constructor = Class.forName("puzzles.Day$day").kotlin.constructors.first()
-	val input = getTestInput(inputFile ?: "day${day}")
-
-	val puzzle = constructor.call(input) as Puzzle
-	val result1 = puzzle.part1()
-	val result2 = puzzle.part2()
-
-	if (result1 != expected1 || result2 != expected2) println("Input:\n$input")
-
-	assertEquals(expected1, result1)
-	assertEquals(expected2, result2)
+		assertContentEquals(listOf(expected1, expected2), listOf(actual1, actual2))
+	} else if (expected1 != null) {
+		assertEquals(expected1, puzzle.part1())
+	} else {
+		assertEquals(expected2, puzzle.part2())
+	}
 }

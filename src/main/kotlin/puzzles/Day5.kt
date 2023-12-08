@@ -4,7 +4,7 @@ import Puzzle
 import utils.intersects
 import kotlin.math.min
 
-class Day5(input: String) : Puzzle(input) {
+class Day5(input: String) : Puzzle<Long>(input) {
 	class ItemMap(ranges: List<Pair<LongRange, Long>>, val name: String) {
 		val sourceRanges: List<LongRange>
 		val offsets: List<Long>
@@ -85,17 +85,17 @@ class Day5(input: String) : Puzzle(input) {
 		.drop(1)
 		.map(ItemMap::fromString)
 
-	override fun part1(): Int {
+	override fun part1(): Long {
 		val mappings = seeds.map {
 			itemMaps.fold(it..it) { acc, map ->
 				map.mapRange(acc).first()
 			}
 		}
 
-		return mappings.minBy { it.first }.first.toInt()
+		return mappings.minBy { it.first }.first
 	}
 
-	override fun part2(): Int {
+	override fun part2(): Long {
 		val seedGroups = seeds.asSequence()
 			.chunked(2)
 			.map { (first, last) -> first..<(first+last) }
@@ -106,6 +106,6 @@ class Day5(input: String) : Puzzle(input) {
 			}
 		}
 
-		return result.toList().minBy { it.first }.first.toInt()
+		return result.toList().minBy { it.first }.first
 	}
 }

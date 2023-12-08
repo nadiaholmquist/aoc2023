@@ -6,7 +6,7 @@ import kotlin.math.floor
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Day6(input: String) : Puzzle(input) {
+class Day6(input: String) : Puzzle<Int>(input) {
 	val races: List<Pair<Long, Long>>
 	val singleRace: Pair<Long, Long>
 

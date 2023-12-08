@@ -3,7 +3,7 @@ package puzzles
 import Puzzle
 import utils.intersects
 
-class Day3(input: String) : Puzzle(input) {
+class Day3(input: String) : Puzzle<Int>(input) {
 	interface Part
 	data class Symbol(val x: Int, val y: Int, val symbol: Char) : Part
 	data class Number(val x: Int, val y: Int, val value: Int, val digits: Int): Part {

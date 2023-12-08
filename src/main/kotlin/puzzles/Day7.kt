@@ -1,9 +1,8 @@
 package puzzles
 
 import Puzzle
-import javax.print.attribute.standard.JobKOctets
 
-class Day7(input: String) : Puzzle(input) {
+class Day7(input: String) : Puzzle<Long>(input) {
 	enum class Card {
 		JOKER, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
 		TEN, JACK, QUEEN, KING, ACE;
@@ -71,7 +70,6 @@ class Day7(input: String) : Puzzle(input) {
 		.map { handStrength(it.first, part == 2) to it.second }
 		.sortedBy { it.first }
 		.foldIndexed(0L) { index, acc, (_, bid) -> acc + bid * (index + 1) }
-		.toInt()
 
 	override fun part1() = doPart(1)
 	override fun part2() = doPart(2)
