@@ -49,24 +49,19 @@ class Day8(input: String) : Puzzle<Long>(input) {
 	}
 
 	fun lcm(elements: List<Long>): Long {
-		val temp = elements.toMutableList()
-		while (true) {
-			var minIndex = -1
-			var currMin = Long.MAX_VALUE
-			var different = 0
-			val first = temp[0]
-			for (i in 0..temp.lastIndex) {
-				if (temp[i] < currMin) {
-					currMin = temp[i]
-					minIndex = i
-				}
-				if (temp[i] != first) different++
+		fun gcd(a: Long, b: Long): Long {
+			var a2 = a
+			var b2 = b
+			while (b2 != 0L) {
+				val temp = b2
+				b2 = a2 % b2
+				a2 = temp
 			}
-			if (different == 0) break
-
-			temp[minIndex] += elements[minIndex]
+			return a2
 		}
-		return temp[0]
+		fun lcmInner(a: Long, b: Long) = a / gcd(a, b) * b
+
+		return elements.reduce(::lcmInner)
 	}
 
 	override fun part1() = distance(startingNodes.first(), listOf(endingNodes.last()))
