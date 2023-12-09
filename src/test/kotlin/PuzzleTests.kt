@@ -12,4 +12,5 @@ class PuzzleTests {
 	@Test fun day7() = test<Day7, Long>(6440, 5905)
 	@Test fun day8part1() = test<Day8, Long>(2, null, "day8_1")
 	@Test fun day8part2() = test<Day8, Long>(null, 6, "day8_2")
+	@Test fun day9() = test<Day9, Int>(114, 2, "day9")
 }
