@@ -103,7 +103,6 @@ class Day10(input: String) : Puzzle<Int>(input) {
 	fun findPath(): List<Pair<Pair<Int, Int>, Tile>> {
 		var currTile = start
 		var lastDir = tiles[start].connectsDirections().first()
-		var steps = 0
 		var points = mutableListOf<Pair<Pair<Int, Int>, Tile>>()
 		do {
 			points.add(currTile to tiles[currTile])
@@ -112,7 +111,6 @@ class Day10(input: String) : Puzzle<Int>(input) {
 			val offset = dir.offset()
 			currTile = currTile.first + offset.first to currTile.second + offset.second
 			lastDir = dir.opposite()
-			steps++
 		} while (currTile != start)
 
 		return points
@@ -123,7 +121,7 @@ class Day10(input: String) : Puzzle<Int>(input) {
 	override fun part2(): Int {
 		val path = findPath()
 
-		val out = MutableList(tiles.size) { y ->
+		val out = MutableList(tiles.size) { _ ->
 			MutableList(tiles[0].size) { Tile.NONE }
 		}
 
@@ -135,7 +133,7 @@ class Day10(input: String) : Puzzle<Int>(input) {
 		var insidePath: Boolean
 		var found = 0
 		var lastDir: Tile
-		out.forEachIndexed { y, row ->
+		out.forEach { row ->
 			insidePath = false
 			lastDir = Tile.NONE
 
