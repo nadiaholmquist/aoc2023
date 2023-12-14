@@ -1,5 +1,8 @@
 import puzzles.*
+import java.io.File
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class PuzzleTests {
 	@Test fun day1part1() = test<Day1, Int>(142, null)
@@ -16,4 +19,5 @@ class PuzzleTests {
 	@Test fun day10() = test<Day10, Int>(4, null, "day10_1")
 	@Test fun day10part2() = test<Day10, Int>(null, 8, "day10_2")
 	@Test fun day11() = test<Day11, Long>(374, 82000210, "day11")
+	@Test fun day14() = test<Day14, Int>(136, 64, "day14")
 }

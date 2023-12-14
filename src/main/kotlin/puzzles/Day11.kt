@@ -6,7 +6,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 class Day11(input: String): Puzzle<Long>(input) {
-
 	fun parseInput(): Pair<List<Pair<Long, Long>>, Pair<List<Int>, List<Int>>> {
 		val lines = input.lines()
 
