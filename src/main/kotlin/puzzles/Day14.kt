@@ -63,7 +63,15 @@ class Day14(input: String) : Puzzle<Int>(input) {
 						rocks[i] = newRock
 					}
 				}
-				if (dir.second != 0) rocks.sortBy { it.second * width + it.first }
+				if (dir.second != 0) {
+					var index = 0
+
+					map.forEachIndexed { y, line ->
+						line.forEachIndexed { x, char ->
+							if (char == 'O') rocks[index++] = x to y
+						}
+					}
+				}
 			}
 
 			if (map.hashCode() in lastMaps) {
