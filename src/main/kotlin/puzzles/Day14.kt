@@ -46,7 +46,7 @@ class Day14(input: String) : Puzzle<Int>(input) {
 		val width = map.first().size
 		val directions = listOf(0 to -1, -1 to 0, 0 to 1, 1 to 0)
 
-		val lastMaps = mutableListOf(map.hashCode())
+		val lastRocks = hashSetOf(rocks)
 		var firstMatch: Long = 0
 		var iteration = 0L
 		val totalIterations = 1000000000L
@@ -74,7 +74,7 @@ class Day14(input: String) : Puzzle<Int>(input) {
 				}
 			}
 
-			if (map.hashCode() in lastMaps) {
+			if (rocks in lastRocks) {
 				if (firstMatch == 0L) {
 					firstMatch = iteration
 				} else {
@@ -82,9 +82,9 @@ class Day14(input: String) : Puzzle<Int>(input) {
 					val numCycles = ((totalIterations - firstMatch) / cycleLength) - 1
 					iteration += cycleLength * numCycles
 				}
-				lastMaps.clear()
+				lastRocks.clear()
 			}
-			lastMaps.add(map.hashCode())
+			lastRocks.add(rocks)
 		}
 
 		return rocks.sumOf { map.size - it.second }
