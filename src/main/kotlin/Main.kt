@@ -39,7 +39,7 @@ fun runBenchmark() {
 	}
 
 	for (i in 1..25) {
-		val p = Puzzle.forDay(i) ?: break
+		val p = Puzzle.forDay(i) ?: continue
 		val instance = p.constructors.first().call(Puzzle.getInput(i))
 		var min = Duration.INFINITE
 		var max = Duration.ZERO
