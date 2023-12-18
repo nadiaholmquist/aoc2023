@@ -22,4 +22,5 @@ class PuzzleTests {
 	@Test fun day14() = test<Day14, Int>(136, 64, "day14")
 	@Test fun day15() = test<Day15, Int>(1320, 145, "day15")
 	@Test fun day16() = test<Day16, Int>(46, 51, "day16")
+	@Test fun day18() = test<Day18, Long>(62, 0, "day18")
 }
