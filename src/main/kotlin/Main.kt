@@ -26,7 +26,7 @@ fun runPuzzle(day: Int): Boolean {
 	return true
 }
 
-fun runBenchmark() {
+fun runBenchmark(day: Int?) {
 	println("Day  Part  Min            Average        Max")
 
 	fun printStats(day: Int, part: Int, min: Duration, avg: Duration, max: Duration) {
@@ -38,7 +38,9 @@ fun runBenchmark() {
 		println()
 	}
 
-	for (i in 1..25) {
+	val runDays = if (day != null) day..day else 1..25
+
+	for (i in runDays) {
 		val p = Puzzle.forDay(i) ?: continue
 		val instance = p.constructors.first().call(Puzzle.getInput(i))
 		var min = Duration.INFINITE
@@ -89,7 +91,8 @@ fun main(args: Array<String>) {
 		} else if (puzzleToRun.toIntOrNull() != null) {
 			runDay = puzzleToRun.toInt()
 		} else if (puzzleToRun == "benchmark") {
-			runBenchmark()
+			val day = args.getOrNull(1)?.toInt()
+			runBenchmark(day)
 			return
 		} else {
 			println("Invalid argument, must be a day from 1-25 or 'today' or 'benchmark'.")
